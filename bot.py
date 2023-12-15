@@ -85,7 +85,7 @@ async def check_for_updates(channel, debug):
                     changelog_url = changelog_base_url.format(mod_id, file_id)
                     changelog_response = requests.get(changelog_url, headers=headers)
                     if changelog_response.status_code == 200:
-                        mod_name_cleaned = mod_name.replace(' ', '-')
+                        mod_name_cleaned = mod_name.replace(' ', '-').lower()
                         changelog_weburl = f"**For the full changelog visit:**\nhttps://www.curseforge.com/ark-survival-ascended/mods/{mod_name_cleaned}/files/{file_id}"
                         max_chars = 1024
                         changelog_data = changelog_response.json()
