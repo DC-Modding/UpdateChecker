@@ -1,0 +1,5 @@
+.idea
+venv
+latestpublic.txt
+mod_data.db
+__pycache__
