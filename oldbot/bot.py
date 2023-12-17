@@ -89,7 +89,7 @@ async def check_for_updates(channel, debug):
                         max_chars = 1024
                         changelog_data = changelog_response.json()
                         changes = changelog_data['data']
-                        changes = changes.replace('<p>', '').replace('</p>', '\n').replace('<br>', '\n')
+                        changes = changes.replace('<p>', '').replace('</p>', '\n').replace('<br>', '\n').replace('&quot;', '"')
                         version, *changes_lines = changes.split('\n', 1)
                         changes = '\n'.join(changes_lines)
                         embed = discord.Embed(title='Update has been published!', color=discord.Color.green())
