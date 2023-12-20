@@ -17,3 +17,5 @@ discord.py
 aiosqlite  
 requests  
 
+
+![image](https://i.imgur.com/P1SF2qj.png)
