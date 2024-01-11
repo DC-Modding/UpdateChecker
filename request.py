@@ -2,6 +2,7 @@ import requests
 import json
 import discord
 import asyncio
+import html2text
 from datetime import datetime
 
 
@@ -79,7 +80,8 @@ async def check_for_updates(channel, debug, mod_ids, mod_info_url, headers, file
                         max_chars = 1024
                         changelog_data = changelog_response.json()
                         changes = changelog_data['data']
-                        changes = changes.replace('<p>', '').replace('</p>', '\n').replace('<br>', '\n').replace('&quot;', '"')
+                        changes = html2text.html2text(changes, bodywidth=0)
+                        changes = changes.replace('\-', '-')
                         version, *changes_lines = changes.split('\n', 1)
                         changes = '\n'.join(changes_lines)
                         embed = discord.Embed(title='Update has been published!', color=discord.Color.green())

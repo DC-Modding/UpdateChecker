@@ -15,7 +15,8 @@ to start the bot install the dependencies listed down below and run `python3 mai
   
 discord.py   
 aiosqlite  
-requests  
+requests
+html2text  
 
 
 ![image](https://i.imgur.com/P1SF2qj.png)
