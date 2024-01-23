@@ -91,28 +91,17 @@ async def check_for_updates_db(channel, debug, mod_ids, mod_info_url, headers, c
                         changelog_url = changelog_base_url.format(mod_id, file_id)
                         changelog_response = requests.get(changelog_url, headers=headers)
                         if changelog_response.status_code == 200:
-                            changelog_weburl = f"**For the full changelog visit:**\n{mod_cf_url}/files/{file_id}"
-                            max_chars = 1024
                             changelog_data = changelog_response.json()
                             changes = changelog_data['data']
                             changes = html2text.html2text(changes, bodywidth=0)
                             changes = changes.replace('\-', '-')
                             version, *changes_lines = changes.split('\n', 1)
                             changes = '\n'.join(changes_lines)
-                            embed = discord.Embed(title='Update has been published!', color=discord.Color.green())
-                            if len(changes) > max_chars:
-                                last_newline_index = changes.rfind('\n', 0, max_chars)
-                                if last_newline_index != -1:
-                                    changes = f'{changes[:last_newline_index]}'
-                                else:
-                                    changes = f'{changes[:max_chars - len(changelog_weburl)]}'
-                                embed.add_field(name=version, value=changes, inline=False)
-                                embed.add_field(name="...", value=changelog_weburl, inline=False)
-                            else:
-                                embed.add_field(name=version, value=changes, inline=False)
-                            embed.add_field(name="Mod-URL", value=mod_cf_url, inline=False)
-                            embed.set_author(name=mod_name)
+                            embed = discord.Embed(title=f"{mod_name} Update has been published!",
+                                                  color=discord.Color.green())
+                            embed.description = f"**{version}**\n{changes}"
                             embed.set_thumbnail(url=icon)
+                            embed.add_field(name="Mod-URL", value=mod_cf_url, inline=False)
                             await channel.send(embed=embed)
                         else:
                             print(f'Changelog Request failed for Mod ID {mod_id}:', changelog_response.status_code)
