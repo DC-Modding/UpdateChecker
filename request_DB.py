@@ -46,10 +46,7 @@ async def fill_initial_data_db(mod_ids, mod_info_url, headers, debug):
                         VALUES (?, ?, ?, ?, ?)
                     ''', (mod_id, mod_name, latest_file, latest_date, mod_cf_url))
                     await db.commit()
-                else:
-                    print(f'Skipped Mod ID {mod_id}: Entry already exists')
             else:
-                print(f'Mod Request failed for Mod ID {mod_id}:', response.status_code)
                 await debug.send(f"Mod Request failed for Mod ID {mod_id}: {response.status_code}")
 
 
@@ -62,7 +59,6 @@ async def check_for_updates_db(channel, debug, mod_ids, mod_info_url, headers, c
                 mod_url = mod_info_url.format(mod_id)
                 response = requests.get(mod_url, headers=headers)
                 if response.status_code == 200:
-                    print(f'Request for Mod ID {mod_id} successful!')
                     response_data = response.json()
                     mod_name = response_data['data']['name']
                     latest_files = response_data['data']['latestFiles']
@@ -108,11 +104,9 @@ async def check_for_updates_db(channel, debug, mod_ids, mod_info_url, headers, c
                                 if channel.is_news():
                                     await message.publish()
                         else:
-                            print(f'Changelog Request failed for Mod ID {mod_id}:', changelog_response.status_code)
                             await debug.send(
                                 f"Changelog Request failed for Mod ID {mod_id}: {changelog_response.status_code}")
                 else:
-                    print(f'Mod Request failed for Mod ID {mod_id}:', response.status_code)
                     await debug.send(f"Mod Request failed for Mod ID {mod_id}: {response.status_code}")
             if update_data:
                 for mod_id, data in update_data.items():

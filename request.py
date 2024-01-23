@@ -16,12 +16,10 @@ async def make_initial_request_and_fill_file(mod_ids, mod_info_url, headers, deb
     for mod_id in mod_ids:
         mod_id = str(mod_id)
         if mod_id in initial_data:
-            print(f'Skipped Mod ID {mod_id}: Entry already exists in the file')
             continue
         mod_url = mod_info_url.format(mod_id)
         response = requests.get(mod_url, headers=headers)
         if response.status_code == 200:
-            print(f'Initial Request for Mod ID {mod_id} successful!')
             response_data = response.json()
             mod_name = response_data['data']['name']
             latest_files = response_data['data']['latestFiles']
@@ -32,7 +30,6 @@ async def make_initial_request_and_fill_file(mod_ids, mod_info_url, headers, deb
                 "latest-date": latest_file_info['fileDate']
             }
         else:
-            print(f'Mod Request failed for Mod ID {mod_id}:', response.status_code)
             await debug.send(f"Mod Request failed for Mod ID {mod_id}: {response.status_code}")
     with open(filepath, 'w') as file:
         json.dump(initial_data, file, indent=4)
@@ -46,7 +43,6 @@ async def check_for_updates(channel, debug, mod_ids, mod_info_url, headers, file
             mod_url = mod_info_url.format(mod_id)
             response = requests.get(mod_url, headers=headers)
             if response.status_code == 200:
-                print(f'Request for Mod ID {mod_id} successful!')
                 response_data = response.json()
                 mod_name = response_data['data']['name']
                 latest_files = response_data['data']['latestFiles']
@@ -94,11 +90,9 @@ async def check_for_updates(channel, debug, mod_ids, mod_info_url, headers, file
                             if channel.is_news():
                                 await message.publish()
                     else:
-                        print(f'Changelog Request failed for Mod ID {mod_id}:', changelog_response.status_code)
                         await debug.send(
                             f"Changelog Request failed for Mod ID {mod_id}: {changelog_response.status_code}")
             else:
-                print(f'Mod Request failed for Mod ID {mod_id}:', response.status_code)
                 await debug.send(f"Mod Request failed for Mod ID {mod_id}: {response.status_code}")
         if update_data:
             with open(filepath, 'r+') as file:
