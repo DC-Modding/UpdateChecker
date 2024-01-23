@@ -33,8 +33,9 @@ bot = commands.Bot(command_prefix=statics.prefix, intents=statics.intents)
 
 @bot.event
 async def on_message(message):
-    if message.channel.id == statics.channel_id:
-        await message.publish()
+    if statics.announce_messages:
+        if message.channel.id == statics.channel_id:
+            await message.publish()
     if message.author == bot.user:
         return
     if message.content.startswith(statics.prefix):
