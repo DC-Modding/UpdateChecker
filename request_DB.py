@@ -4,6 +4,7 @@ import asyncio
 import aiosqlite
 import html2text
 from datetime import datetime
+from statics import announce_messages
 
 
 db_path = 'mod_data.db'
@@ -102,7 +103,10 @@ async def check_for_updates_db(channel, debug, mod_ids, mod_info_url, headers, c
                             embed.description = f"**{version}**\n{changes}"
                             embed.set_thumbnail(url=icon)
                             embed.add_field(name="Mod-URL", value=mod_cf_url, inline=False)
-                            await channel.send(embed=embed)
+                            message = await channel.send(embed=embed)
+                            if announce_messages:
+                                if channel.is_news():
+                                    await message.publish()
                         else:
                             print(f'Changelog Request failed for Mod ID {mod_id}:', changelog_response.status_code)
                             await debug.send(

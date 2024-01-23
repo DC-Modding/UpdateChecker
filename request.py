@@ -4,6 +4,7 @@ import discord
 import asyncio
 import html2text
 from datetime import datetime
+from statics import announce_messages
 
 
 async def make_initial_request_and_fill_file(mod_ids, mod_info_url, headers, debug, filepath):
@@ -84,11 +85,14 @@ async def check_for_updates(channel, debug, mod_ids, mod_info_url, headers, file
                         version, *changes_lines = changes.split('\n', 1)
                         changes = '\n'.join(changes_lines)
                         embed = discord.Embed(title=f"{mod_name} Update has been published!",
-                                                color=discord.Color.green())
+                                              color=discord.Color.green())
                         embed.description = f"**{version}**\n{changes}"
                         embed.set_thumbnail(url=icon)
                         embed.add_field(name="Mod-URL", value=mod_cf_url, inline=False)
-                        await channel.send(embed=embed)
+                        message = await channel.send(embed=embed)
+                        if announce_messages:
+                            if channel.is_news():
+                                await message.publish()
                     else:
                         print(f'Changelog Request failed for Mod ID {mod_id}:', changelog_response.status_code)
                         await debug.send(
